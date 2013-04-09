@@ -191,7 +191,20 @@ public class RHHBaseGeneral  extends org.apache.hadoop.mapreduce.InputFormat<RHR
 				LOG.error("An error occurred.", e);
 			}
 		} else {
-		    scans = new Scan[] { new Scan() };
+		   
+		    if(conf.get("rhipe.hbase.rowlim.start")!=null && conf.get("rhipe.hbase.rowlim.end") !=null)
+		    {
+		    	 String[] x = conf.get("rhipe.hbase.mozilla.cacheblocks").split(":");
+	    		 scans = Util.generateScans(conf.get("rhipe.hbase.rowlim.start"),
+				       conf.get("rhipe.hbase.rowlim.end"),null					     
+				       Integer.parseInt(x[0]),
+				       Integer.parseInt(x[1]) == 1? true: false);
+		    	
+		    }
+		    else{
+		    	 scans = new Scan[] { new Scan() };
+		    }
+		      
 		}
 		
 		setScans(scans);
